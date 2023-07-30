@@ -1,11 +1,32 @@
 'use client';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AiOutlineClose } from 'react-icons/ai';
 
 export default function Home() {
   const [todos, setTodos] = useState<string[]>([])
   const [completedTodos, setCompletedTodos] = useState<boolean[]>([])
   const [newTodo, setNewTodo] = useState("")
+
+  useEffect(() => {
+    const storedTodos = localStorage.getItem("todos")
+    const storedCompletedTodos = localStorage.getItem("completedTodos")
+
+    if(storedTodos) {
+      setTodos(JSON.parse(storedTodos))
+    }
+
+    if(storedCompletedTodos) {
+      setCompletedTodos(JSON.parse(storedCompletedTodos))
+    }
+  }, [])
+
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos])
+
+  useEffect(() => {
+    localStorage.setItem("completedTodos", JSON.stringify(completedTodos));
+  }, [completedTodos])
 
   function addTodo() {
     if(newTodo.trim() !== '') {
